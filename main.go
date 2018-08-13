@@ -9,7 +9,7 @@ import (
 )
 
 func index(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	t, err := template.ParseFiles("index.html")
+	t, err := template.ParseFiles("login.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

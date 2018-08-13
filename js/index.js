@@ -118,3 +118,10 @@ $(function () {
 
 });
 
+$("#login").click(function () {
+	alert('login');
+});
+
+$("#signup").click(function () {
+	window.location.href = "http://localhost:3123";
+});
