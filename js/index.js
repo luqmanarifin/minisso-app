@@ -119,7 +119,7 @@ $(function () {
 });
 
 $("#login").click(function () {
-	alert('login');
+	// alert('login');
 });
 
 $("#signup").click(function () {
