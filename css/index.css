@@ -52,7 +52,7 @@
    font-size: 34px;
    font-weight: 700;
    letter-spacing: 2px;
-   color: #ED2553;
+   color: #000000;
    position: relative;
 }
 
@@ -63,7 +63,7 @@
    position: absolute;
    top: 0;
    left: -50px;
-   background: #ED2553;
+   background: #000000;
 }
 
 .input,
@@ -145,7 +145,7 @@
 }
 
 .input .spin {
-   background: #ED2553;
+   background: #000000;
    z-index: 4;
    width: 0;
 }
@@ -194,7 +194,7 @@
 
 .button button {
    background-color: #fff;
-   color: #ED2553;
+   color: #000000;
    border: none;
 }
 
@@ -230,8 +230,8 @@
 }
 
 .button.login button:hover {
-   color: #ED2553;
-   border-color: #ED2553;
+   color: #000000;
+   border-color: #000000;
 }
 
 .button {
@@ -266,7 +266,7 @@
    position: absolute;
    top: 0;
    left: 0;
-   background: #ED2553;
+   background: #000000;
    border-radius: 50%;
 }
 
@@ -316,7 +316,7 @@
    width: 140px;
    height: 140px;
    border-radius: 50%;
-   background: #ED2553;
+   background: #000000;
    position: absolute;
    top: 40px;
    right: -70px;

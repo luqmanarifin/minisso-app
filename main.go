@@ -118,13 +118,8 @@ func signup(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 		res := response.BuildSuccess(metadata, response.MetaInfo{HTTPStatus: metadata.Meta.HttpStatus})
 		response.Write(w, res, metadata.Meta.HttpStatus)
 	} else {
-		log.Printf("otoke %v", resp.Body)
 		errorBody := ErrorBody{}
 		decode(resp.Body, &errorBody)
-		log.Printf("panjang %d", len(errorBody.Errors))
-		for _, error := range errorBody.Errors {
-			log.Printf("%s", error.Message)
-		}
 		res := response.BuildSuccess(errorBody, response.MetaInfo{HTTPStatus: errorBody.Meta.HTTPStatus})
 		response.Write(w, res, errorBody.Meta.HTTPStatus)
 	}
@@ -147,6 +142,7 @@ func main() {
 	router.POST("/logout", logout)
 	router.ServeFiles("/css/*filepath", http.Dir("css"))
 	router.ServeFiles("/js/*filepath", http.Dir("js"))
+	router.ServeFiles("/images/*filepath", http.Dir("images"))
 
 	fmt.Println("Starting front-end...")
 	http.ListenAndServe(":3123", router)
