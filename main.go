@@ -38,7 +38,6 @@ func getLoggedIn(r *http.Request) *http.Response {
 	for _, cookie := range r.Cookies() {
 		req.AddCookie(cookie)
 	}
-	fmt.Printf("req: %v\n", req)
 	response, _ := client.Do(req)
 	return response
 
@@ -83,13 +82,17 @@ func login(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	for _, cookie := range r.Cookies() {
 		req.AddCookie(cookie)
 	}
-	fmt.Printf("req: %v\n", req)
 	client := &http.Client{}
 	response, _ := client.Do(req)
 	for _, cookie := range response.Cookies() {
 		http.SetCookie(w, cookie)
 	}
 	http.Redirect(w, r, "/", http.StatusFound)
+}
+
+type ErrorBody struct {
+	Errors []response.ErrorInfo `json:"errors"`
+	Meta   response.MetaInfo    `json:"meta"`
 }
 
 func signup(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
@@ -109,10 +112,23 @@ func signup(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	for _, cookie := range resp.Cookies() {
 		http.SetCookie(w, cookie)
 	}
-	metadata := Metadata{}
-	decode(resp.Body, &metadata)
-	res := response.BuildSuccess(metadata.Data, response.MetaInfo{HTTPStatus: metadata.Meta.HttpStatus})
-	response.Write(w, res, metadata.Meta.HttpStatus)
+	if resp.StatusCode == 200 {
+		metadata := Metadata{}
+		decode(resp.Body, &metadata)
+		res := response.BuildSuccess(metadata, response.MetaInfo{HTTPStatus: metadata.Meta.HttpStatus})
+		response.Write(w, res, metadata.Meta.HttpStatus)
+	} else {
+		log.Printf("otoke %v", resp.Body)
+		errorBody := ErrorBody{}
+		decode(resp.Body, &errorBody)
+		log.Printf("panjang %d", len(errorBody.Errors))
+		for _, error := range errorBody.Errors {
+			log.Printf("%s", error.Message)
+		}
+		res := response.BuildSuccess(errorBody, response.MetaInfo{HTTPStatus: errorBody.Meta.HTTPStatus})
+		response.Write(w, res, errorBody.Meta.HTTPStatus)
+	}
+
 }
 
 func logout(w http.ResponseWriter, r *http.Request, params httprouter.Params) {

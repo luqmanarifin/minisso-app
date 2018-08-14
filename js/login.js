@@ -73,6 +73,7 @@ $(function () {
 			$(".overbox .title").fadeOut(300);
 			$(".overbox .input").fadeOut(300);
 			$(".overbox .button").fadeOut(300);
+			$(".overbox .signup-error").fadeOut(300);
 
 			$(".alt-2").addClass('material-buton');
 		}
@@ -103,6 +104,7 @@ $(function () {
 				$(".overbox .title").fadeIn(300);
 				$(".overbox .input").fadeIn(300);
 				$(".overbox .button").fadeIn(300);
+				$(".overbox .signup-error").fadeIn(300);
 			}, 700)
 
 			$(this).removeClass('material-button');
@@ -125,6 +127,15 @@ $(function () {
 		email = $("#regemail").val();
 		pass = $("#regpass").val();
 
+		if (!validateEmail(email)) {
+			$("#signup-error").text("Email invalid.");
+			return;
+		}
+		if (first_name == "" || last_name == "" || email == "" || pass == "") {
+			$("#signup-error").text("All fields should be filled in.");
+			return;
+		}
+
 		data = {
 			application: {
 				client_id: "id",
@@ -146,11 +157,17 @@ $(function () {
 			contentType: "application/json",
 			dataType: "json",
 			success: function(data, status) {
-				obj = data.view_data;
-				console.log(obj);
-				alert("Data " + data + "\nStatus: " + status + "\ncode: " + obj.meta.http_status);
+				window.location.href = "/";
+			},
+			error: function(data, status) {
+				console.log(data);
+				$("#signup-error").text(data.responseJSON.data.errors[0].message);
 			}
 		});
 	});
 });
 
+function validateEmail(email) {
+	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return re.test(String(email).toLowerCase());
+}

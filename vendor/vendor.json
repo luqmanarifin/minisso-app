@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "iOz1fQO1HuleWlMBQ2Hnapu4Ud4=",
+			"path": "github.com/bukalapak/packen/response",
+			"revision": "09d2770ef17290d59f3f6dbf984e052e270123f7",
+			"revisionTime": "2018-05-17T05:48:28Z"
+		},
+		{
 			"checksumSHA1": "X7g98YfLr+zM7aN76AZvAfpZyfk=",
 			"path": "github.com/julienschmidt/httprouter",
 			"revision": "adbc77eec0d91467376ca515bc3a14b8434d0f18",
