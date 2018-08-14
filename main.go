@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/bukalapak/packen/response"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -92,7 +93,26 @@ func login(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 }
 
 func signup(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	// simulate HTTP request
+	credential := Credential{}
+	decode(r.Body, &credential)
+	req, _ := http.NewRequest("POST", "http://localhost:1234/signup", credential.ToIoReader())
+	for _, cookie := range r.Cookies() {
+		req.AddCookie(cookie)
+	}
 
+	// do request
+	client := &http.Client{}
+	resp, _ := client.Do(req)
+
+	// simulate HTTP response
+	for _, cookie := range resp.Cookies() {
+		http.SetCookie(w, cookie)
+	}
+	metadata := Metadata{}
+	decode(resp.Body, &metadata)
+	res := response.BuildSuccess(metadata.Data, response.MetaInfo{HTTPStatus: metadata.Meta.HttpStatus})
+	response.Write(w, res, metadata.Meta.HttpStatus)
 }
 
 func logout(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
@@ -108,7 +128,7 @@ func main() {
 	router.GET("/", index)
 	router.POST("/login", login)
 	router.POST("/signup", signup)
-	router.GET("/logout", logout)
+	router.POST("/logout", logout)
 	router.ServeFiles("/css/*filepath", http.Dir("css"))
 	router.ServeFiles("/js/*filepath", http.Dir("js"))
 
